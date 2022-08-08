@@ -28,6 +28,7 @@ func init() {
 		"ropsten": true,
 		"prater":  true,
 		"sepolia": true,
+		"gnosis":  true,
 	}
 
 	NetworksToServices = map[string]string{
@@ -36,6 +37,7 @@ func init() {
 		"ropsten": "merge",
 		"prater":  "merge",
 		"sepolia": "merge",
+		"gnosis":  "merge",
 	}
 
 	NetworksToCheckpointUrl = map[string]string{
