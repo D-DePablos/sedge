@@ -2,8 +2,9 @@
 {{ define "docker-compose" }}
 version: "3.9"
 
-services: {{ if not .ExecutionIsRemote }} {{template "execution" .}}
-{{ end }} {{if .Mev}}
+services:
+{{template "execution" .}}
+{{if .Mev}}
   mevboost:
     image: flashbots/mev-boost:latest
     networks:
@@ -14,13 +15,11 @@ services: {{ if not .ExecutionIsRemote }} {{template "execution" .}}
       - /app/mev-boost
       - -addr
       - 0.0.0.0:{{.MevPort}}
-      - {{if .SplittedNetwork }} -ropsten {{ else }} -${NETWORK} {{ end }}
+      - -${NETWORK}
       - -relay-check
       - -relays
-      - ${RELAY_URL}
-{{end}} {{ if not .ConsensusIsRemote }} 
-{{template "consensus" .}} 
-{{ end }}
+      - ${RELAY_URL}{{end}}
+{{template "consensus" .}}
 {{template "validator" .}}
 
 networks:
