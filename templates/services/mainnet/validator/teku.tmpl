@@ -23,7 +23,7 @@
       - --metrics-enabled=true
       - --metrics-host-allowlist=*
       - --metrics-interface=0.0.0.0
-      - --metrics-port={{.VlMetricsPort}}{{with .FeeRecipient}}
+      - --metrics-port={{.VlMetricsPort}}{{ with .FeeRecipient }}
       - --validators-proposer-default-fee-recipient=${CL_FEE_RECIPIENT}{{end}}{{range $flag := .VlExtraFlags}}
       - --{{$flag}}{{end}}
     logging:

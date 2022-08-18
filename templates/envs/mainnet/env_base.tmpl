@@ -3,6 +3,7 @@
 # --- Global configuration ---
 NETWORK=mainnet {{ if not .ExecutionIsRemote }}
 {{template "execution" .}}{{ end }} {{ if not .ConsensusIsRemote }}
-{{template "consensus" .}} {{ end }}
+{{template "consensus" .}} {{ else }}
+CL_FEE_RECIPIENT={{ .FeeRecipient }}{{ end }}
 {{template "validator" .}}
 {{ end }}
