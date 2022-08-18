@@ -319,6 +319,9 @@ func trackSync(m MonitoringTool, elPort, clPort, executionUrl, consensusUrl stri
 		}
 
 		executionUrl = fmt.Sprintf("http://%s:%s", executionIP, elPort)
+	} else {
+		log.Infof("Using external execution node: %s", executionUrl)
+		executionUrl = executionUrl + elPort
 	}
 
 	// If consensus URL not provided, use docker network IP
@@ -334,8 +337,8 @@ func trackSync(m MonitoringTool, elPort, clPort, executionUrl, consensusUrl stri
 
 		consensusUrl = fmt.Sprintf("http://%s:%s", consensusIP, clPort)
 	} else {
+		log.Infof("Using external consensus node: %s", consensusUrl)
 		consensusUrl = consensusUrl + clPort
-		executionUrl = consensusUrl + elPort
 	}
 	statuses := m.TrackSync(done, []string{consensusUrl}, []string{executionUrl}, wait)
 
