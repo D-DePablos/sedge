@@ -401,17 +401,19 @@ c. node_type string
 Type of node which is remote ("execution", "consensus")
 */
 func handleExternalUrlPort(user_url, default_api_port, default_auth_port, node_type string) (string, string, error) {
+	// TODO: There is a bug here in how URL is constructed...
 	parsed_url, _ := url.Parse(user_url)
 	port := parsed_url.Port()
+	host := parsed_url.String()
 
 	// Attempt to get port from URL again if not found
 	// This is useful for remote consensus
 	if port == "" {
 		_, port, _ = net.SplitHostPort(parsed_url.Path)
+	} else {
+		// Extract the host name to create secondary URLs
+		host = strings.Replace(parsed_url.String(), fmt.Sprintf(":%v", port), "", 1)
 	}
-
-	// Extract the host name to create secondary URLs
-	host := strings.ReplaceAll(parsed_url.String(), ":"+port, "")
 
 	// If not a valid port (or missing)
 	if !utils.VerifyPortValid(port) {

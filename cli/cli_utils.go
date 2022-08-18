@@ -312,7 +312,7 @@ func trackSync(m MonitoringTool, elPort, clPort, executionUrl, consensusUrl stri
 	log.Info(configs.GettingContainersIP)
 
 	// If execution URL not provided, use docker network IP
-	if executionUrl == "" {
+	if executionUrl == "" && consensusUrl == "" {
 		executionIP, errE := getContainerIP(execution)
 		if errE != nil {
 			log.Errorf(configs.GetContainerIPError, execution, errE)
@@ -333,14 +333,17 @@ func trackSync(m MonitoringTool, elPort, clPort, executionUrl, consensusUrl stri
 		}
 
 		consensusUrl = fmt.Sprintf("http://%s:%s", consensusIP, clPort)
+	} else {
+		consensusUrl = consensusUrl + clPort
+		executionUrl = consensusUrl + elPort
 	}
-
 	statuses := m.TrackSync(done, []string{consensusUrl}, []string{executionUrl}, wait)
 
 	var esynced, csynced bool
 	// Threshold to stop tracking, to avoid false responses
 	times := 0
 	for s := range statuses {
+		log.Fatal(s)
 		if s.Error != nil {
 			return fmt.Errorf(configs.TrackSyncError, s.Endpoint, s.Error)
 		}
