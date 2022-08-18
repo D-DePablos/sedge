@@ -35,7 +35,7 @@
     image: ${VL_IMAGE_VERSION}
     depends_on: 
       validator-import:
-        condition: service_completed_successfully 
+        condition: service_completed_successfully
     networks:
       - sedge
     ports:
@@ -45,7 +45,6 @@
       - ${KEYSTORE_DIR}/keystore_password.txt:/keystore/keystore_password.txt{{with .VlPrysmCfg}}
       - ./config.yml:/network_config/config.yml{{end}}
     command:
-      - --prater
       - --datadir=/var/lib/prysm
       - --wallet-dir=/var/lib/prysm/wallet
       - --wallet-password-file=/keystore/keystore_password.txt{{if .VlPrysmCfg}}
@@ -58,7 +57,9 @@
       - --monitoring-host=0.0.0.0
       - --monitoring-port={{.VlMetricsPort}}{{range $flag := .VlExtraFlags}}
       - --{{$flag}}{{end}}{{with .FeeRecipient}}
-      - --suggested-fee-recipient=${CL_FEE_RECIPIENT}{{end}}
+      - --suggested-fee-recipient=${CL_FEE_RECIPIENT}{{end}}{{if .Mev}}
+      - --enable-builder
+      - --enable-validator-registration{{end}}
     logging:
       driver: "json-file"
       options:
